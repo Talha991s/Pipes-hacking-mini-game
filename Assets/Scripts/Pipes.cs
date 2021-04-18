@@ -4,31 +4,76 @@ using UnityEngine;
 
 public class Pipes : MonoBehaviour
 {
-    public float correctRotation;
+    public float[] correctRotation;
     [SerializeField]bool isPlaced = false;
     float[] rotations = { 0, 90, 180, 270 };
+
+    int PossibleRotation = 1;
+
+
+  
+    public GameManager gameManager;
+
+    private void Awake()
+    {
+        gameManager.GetComponent<GameManager>();
+    }
     private void Start()
     {
+        PossibleRotation = correctRotation.Length;
         int rand = Random.Range(0, rotations.Length);
         transform.eulerAngles = new Vector3(0, 0, rotations[rand]);
 
-        if (transform.eulerAngles.z == correctRotation )
+        if (PossibleRotation > 1)
         {
-            isPlaced = true;
+            if (transform.eulerAngles.z == correctRotation[0] || transform.eulerAngles.z == correctRotation[1])
+            {
+                isPlaced = true;
+                gameManager.correctMove();
+            }
+        }
+        else
+        {
+            if (transform.eulerAngles.z == correctRotation[0])
+            {
+                isPlaced = true;
+                gameManager.correctMove();
+            }
         }
 
     }
     private void OnMouseDown()
     {
+        gameManager.numofmoves();
         transform.Rotate(new Vector3(0, 0, 90));
-        if(transform.eulerAngles.z == correctRotation&&isPlaced==false)
+        if (PossibleRotation > 1)
         {
-            isPlaced = true;
+            if (transform.eulerAngles.z == correctRotation[0] || transform.eulerAngles.z == correctRotation[1] && isPlaced == false)
+            {
+                isPlaced = true;
+                gameManager.correctMove();
+            }
+            else if (isPlaced == true)
+            {
+                isPlaced = false;
+                gameManager.wrongMove();
+            }
         }
-        else if(isPlaced==true)
+        else
         {
-            isPlaced = false;
+            if (transform.eulerAngles.z == correctRotation[0] && isPlaced == false)
+            {
+                isPlaced = true;
+                gameManager.correctMove();
+            }
+            else if (isPlaced == true)
+            {
+                isPlaced = false;
+                gameManager.wrongMove();
+            }
         }
+
+     
     }
 
 }
