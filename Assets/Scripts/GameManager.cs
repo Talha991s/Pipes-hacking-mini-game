@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     public GameObject[] Pipes;
 
     [SerializeField]int totalPipes =0;
-    [SerializeField] public int totalmoves = 7;
+    [SerializeField] public int totalmoves;
     [SerializeField] public int currentmove = 1;
 
     [SerializeField] private TMP_Text movetext;
@@ -43,6 +43,8 @@ public class GameManager : MonoBehaviour
         if(correctedPipes == totalPipes)
         {
             WinScreen.SetActive(true);
+            Time.timeScale = 0;
+
         }
     }
 
@@ -56,10 +58,11 @@ public class GameManager : MonoBehaviour
 
         movetext.text = currentmove.ToString();
         currentmove += 1;
-        if(currentmove == 8)
+        if(currentmove > totalmoves)
         {
             LoseScreen.SetActive(true);
             Destroy(pipes);
+            Time.timeScale = 0;
         }
     }
 }
